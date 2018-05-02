@@ -1,0 +1,80 @@
+# -----
+# This is the global configuration for the DHJMF classes
+# -----
+
+### BIBSONOMY SETTINGS
+# authentication parameters
+bibsonomy.api.user = <BIBSONOMY USER NAME>
+bibsonomy.api.key = <BIBSONOMY API KEY FOR THE ABOVE SPECIFIED USER>
+
+# can be private or public; private only necessary during development
+bibsonomy.post.visibility = private
+# Each Bibsonomy entry needs at least one tag
+bibsonomy.post.tags = dhjmf
+
+# URL parameter for the Bibsonomy scraping service
+# During development of new scrapers, you might use something as http://localhost:8080/service?url= 
+bibsonomy.url.bibscraper = https://scraper.bibsonomy.org/service?url=
+# Return result of scraping in BibTex format
+bibsonomy.url.format = &format=bibtex
+
+
+### DHJMF SETTINGS
+## mail
+dhjmf.mail.address.from = <SENDER ADDRESS>
+dhjmf.mail.address.password = <SENDER PASSWORD>
+dhjmf.mail.address.to = <RECIPIENT ADDRESS>
+dhjmf.mail.smtphost = <SMTP HOST>
+dhjmf.mail.tlsport = <TLS PORT>
+dhjmf.mail.authentication = <AUTHENTICATION TRUE OR FALSE>
+dhjmf.mail.starttls = <STARTTLS TRUE OR FALSE>
+dhjmf.mail.subject = <SUBJECT OF SENT MAIL>
+dhjmf.mail.body = <BODY/TEXT IN SENT MAIL>
+## general
+dhjmf.common.workdir = <WORKING DIRECTORY, e.g. /home/USERNAME/crawlingservice/>
+dhjmf.common.doiURL = http://dx.doi.org/
+# Name of the directory for new links
+dhjmf.common.folder.newlinks = newlinks
+# Namespaces to be removed from RSS feeds
+dhjmf.common.remove_namespace = rdf
+dhjmf.common.charset = UTF-8
+# Debugging / Verbose parameter
+dhjmf.debug.verbose = true
+# Folder name for logfiles
+dhjmf.logger.folder = logs
+# File name for logfiles
+dhjmf.logger.file = log
+dhjmf.logger.level = finest
+
+## file settings
+dhjmf.files.delimiter \t
+dhjmf.files.eol = \n
+# this file contains URLs from new articles as identified by the crawler class
+dhjmf.files.newlinks = newlinks.txt
+# the generated BibTeX snippets will be written to this file
+dhjmf.files.bibtex_folder = bibtex
+dhjmf.files.bibtex_snippets = bibtex_snippets 
+# Folder that contains information about the crawled journals
+dhjmf.files.journal_folder = journals
+
+
+### INDIVIDUAL JOURNAL SETTINGS
+## ZfdG
+dhjmf.zfdg.name = ZfdG
+dhjmf.zfdg.homepage = http://zfdg.de/
+dhjmf.zfdg.doi = 10.17175/
+dhjmf.zfdg.feedURL = http://zfdg.de/rss.xml
+# File names
+dhjmf.zfdg.files.documentation = ZfdG_crawled_articles.txt
+dhjmf.zfdg.files.documentation_tmp = ZfdG.tmp
+dhjmf.zfdg.files.newlinks = ZfdG_newlinks
+
+## Umanistica Digitale
+dhjmf.umanisticadigitale.name = UmanisticaDigitale
+dhjmf.umanisticadigitale.homepage = https://umanisticadigitale.unibo.it/
+dhjmf.umanisticadigitale.doi = 10.6092/issn.2532-8816/
+dhjmf.umanisticadigitale.feedURL = https://umanisticadigitale.unibo.it/gateway/plugin/WebFeedGatewayPlugin/rss2
+# File names
+dhjmf.umanisticadigitale.files.documentation = UmanisticaDigitale_crawled_articles.txt
+dhjmf.umanisticadigitale.files.documentation_tmp = UmanisticaDigitale.tmp
+dhjmf.umanisticadigitale.files.newlinks = UmanisticaDigitale_newlinks
