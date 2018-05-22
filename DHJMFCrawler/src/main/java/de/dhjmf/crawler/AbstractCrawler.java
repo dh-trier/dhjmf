@@ -16,9 +16,10 @@ import de.dhjmf.Utils;
 
 
 /**
- * Abstract class for all digital humanities journal crawlers
+ * Abstract class for all digital humanities journal crawlers.
  * 
- * @author alueschow
+ * @author Andreas Lüschow
+ * @since 2018-05-22
  */
 public abstract class AbstractCrawler {
 	
@@ -33,7 +34,7 @@ public abstract class AbstractCrawler {
 	
 	
 	/** 
-	 * Specifies the pattern for the journal's identifier; usually a URL inside the docfile
+	 * Specifies the pattern for the journal's identifier; usually a URL inside the docfile.
 	 */
 	protected AbstractCrawler() throws IOException {
 		this.duplicatesCount = 0;
@@ -47,20 +48,17 @@ public abstract class AbstractCrawler {
     
 	/** 
 	 * Start crawling
-	 * 
-	 * @return nothing 
 	 */
 	public abstract void start() throws FileNotFoundException, IOException;
 	
 	/** 
 	 * Get the entries that were already crawled and added to Bibsonomy
 	 * from the file that belongs to this crawler and put them in 
-	 * a temporary file
+	 * a temporary file.
 	 * 
-	 * @param docfile for the specific journal
-	 * @param temporary file for the specific journal
-	 * @return a List with Strings that contains all identifiers from
-	 * the docfile 
+	 * @param docfile Docfile for the specific journal
+	 * @param tmpfile Temporary file for the specific journal
+	 * @return A List with Strings that contains all identifiers from the docfile 
 	 */
 	protected List<String> getPreviousEntries(File docfile, File tmpfile) throws FileNotFoundException, IOException {
 		List<String> preventries = new ArrayList<String>();
@@ -89,9 +87,10 @@ public abstract class AbstractCrawler {
 	}	
 	
 	/** 
-	 * Combine new entries in the docfile with old entries from the temporary file
+	 * Combine new entries in the docfile with old entries from the temporary file.
 	 * 
-	 * @param a BufferedWriter for the journals docfile
+	 * @param docwriter A BufferedWriter for the journal's docfile
+	 * @param tmp A temporary file 
 	 * @return nothing 
 	 */
 	protected void combineFiles(BufferedWriter docwriter, File tmp) throws FileNotFoundException, IOException {

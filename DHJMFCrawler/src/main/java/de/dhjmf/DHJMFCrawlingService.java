@@ -7,7 +7,12 @@ import de.dhjmf.Utils;
 import de.dhjmf.crawler.*;
 import de.dhjmf.mail.Mail;
 
-
+/**
+ * Main class for starting the DHJMF crawling service.
+ *
+ * @author Andreas Lüschow
+ * @since 2018-05-22
+ */
 public final class DHJMFCrawlingService {
 	
 	
@@ -23,13 +28,19 @@ public final class DHJMFCrawlingService {
 	
 	private static final void start() throws Exception {
 				
+		/*
+		 * Add new crawlers here
+		 */
 		final ZfdGCrawler zfdg = new ZfdGCrawler();
 		final UmanisticaDigitaleCrawler umanisticaDigitale = new UmanisticaDigitaleCrawler();
-				
+		/* ... */		
+		
 		/* RSS feeds */
 		Utils.LOGGER.log(Level.INFO, "Starting to crawl RSS feeds ...");
 		zfdg.start();
 		umanisticaDigitale.start();
+		/* ... */
+		
 		Utils.LOGGER.log(Level.INFO, "Crawling of RSS feeds completed!" + Utils.EOL);
 		
 		/* ------------------------- */
@@ -43,7 +54,9 @@ public final class DHJMFCrawlingService {
 		
 		/* ------------------------- */
 		
-		Mail.send(Utils.LOGFILE_MAIL, Utils.LOGFILE);
+		Mail.packFiles();
+		// Mail.send(Utils.LOGFILE_MAIL, Utils.LOGFILE);
+		Mail.send(Utils.ZIPNAME_MAIL, Utils.ZIPNAME);
 		
 		/* ------------------------- */
 		

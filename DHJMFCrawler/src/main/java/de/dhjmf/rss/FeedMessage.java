@@ -2,7 +2,7 @@ package de.dhjmf.rss;
 
 import de.dhjmf.Utils;
 
-/*
+/**
  * Represents one RSS message
  */
 public class FeedMessage {
@@ -37,7 +37,6 @@ public class FeedMessage {
 
     @Override
     public String toString() {
-        // return "FeedMessage [title=" + title + ", link=" + link + ", pubdate=" + pubdate + "]";
     	return pubdate + Utils.DELIMITER + link + Utils.DELIMITER + title + Utils.EOL;
     }
 

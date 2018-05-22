@@ -23,7 +23,12 @@ import javax.mail.internet.MimeMultipart;
 
 import de.dhjmf.Utils;
 
-
+/**
+*  The EmailUtil class is used to authenticate a given email service and to send an email via this service.
+*
+* @author  Andreas Lüschow
+* @since   2018-05-22
+*/
 public class EmailUtil {
 
 	protected static Session authenticate() {
@@ -44,11 +49,15 @@ public class EmailUtil {
 	}
 	
 	/**
-	 * Utility method to send simple HTML email
-	 * @param session
-	 * @param toEmail
-	 * @param subject
-	 * @param body
+	 * Utility method to send a simple HTML email.
+	 * 
+	 * @param session The current Session.
+	 * @param toEmail The recipient mail address.
+	 * @param subject The mail subject.
+	 * @param body The mail body.
+	 * @param filename The filename of the file that is attached to the mail.
+	 * @param filepath Path to the attached file.
+	 * @param attachment Whether an attachment is included or not. 
 	 */
 	protected static void sendEmail(Session session, String toEmail, String subject, String body, String filename, String filepath, Boolean attachment) {
 		try

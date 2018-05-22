@@ -23,41 +23,57 @@ import org.bibsonomy.model.User;
 import org.bibsonomy.model.logic.LogicInterface;
 import org.bibsonomy.model.util.GroupUtils;
 import org.bibsonomy.rest.client.*;
+import org.bibsonomy.rest.client.queries.post.CreatePostQuery;
 import org.bibsonomy.bibtex.parser.*;
+import org.bibsonomy.common.enums.PostUpdateOperation;
 
 import de.dhjmf.Utils;
 
+/**
+ * Class for uploading records to the BibSonomy publication sharing system
+ *
+ * @author Andreas Lüschow
+ * @since 2018-05-22
+ */
 public class BibsonomyService {
 	
-	private static int success = 0;
-    private static int noSuccess = 0;
+	private static int success = 0;  // count successfully uploaded items
+    private static int noSuccess = 0;  // count items that couldn't be uploaded
     private static List<String> successURLs = new ArrayList<String>();
     
+    /**
+     * Method for starting the scraping and upload process.
+     * 
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
 	public void upload() throws FileNotFoundException, IOException {
-
-		
 		/* create basic connection with the Bibsonomy API */
 		final RestLogicFactory rlf = new RestLogicFactory();
 		final LogicInterface logic = rlf.getLogicAccess(Utils.USERNAME, Utils.API_KEY);
-		
 		readInputfile(logic);
-
 	}
 
 
+	/**
+	 * Method for scraping articles on journal websites and writing them to a BibTeX file.
+	 * 
+	 * @param logic
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
 	private static void readInputfile(LogicInterface logic) throws FileNotFoundException, IOException  { 
-		/* read file with new articles */
+		/* create file with new articles */
 		new File(Utils.BIBTEX_FOLDER).mkdir();
 		File bibtex = new File(Utils.BIBTEX_FILE);
 		FileWriter fw = new FileWriter(bibtex);
 		BufferedWriter writerBibtex = new BufferedWriter(fw);
-		
+		/* read file with new links */
         FileReader reader = new FileReader(Utils.NEWLINKS);
         BufferedReader br = new BufferedReader(reader);
         String line = br.readLine();
         
-        
- 
+        /* start scraping */
         while(line != null) {
         	String url = Utils.BIBSCRAPER_BASE_URL + line + Utils.BIBSCRAPER_FORMAT;
         	System.out.println("URL: " + url);
@@ -73,7 +89,7 @@ public class BibsonomyService {
             	    
             	    // System.out.println(responseBody);
             	    writerBibtex.write(responseBody + Utils.EOL + Utils.EOL);  // create a blank line between two entries
-            	    uploadPost(logic, post, line);
+            	    uploadPost(logic, post, line);  // upload scraped post
             	}
         	} catch (NoSuchElementException e) {
         		String errMsg = line + " does not point to a scrapable URL, please check this! Reason: " + e.toString();
@@ -92,7 +108,7 @@ public class BibsonomyService {
         br.close();
         /* Log successfully uploaded URLs */
         if(successURLs.size() > 0) {
-        	Utils.LOGGER.log(Level.INFO, "Succesfully uploaded:");
+        	Utils.LOGGER.log(Level.INFO, "Successfully uploaded:");
             for (String successURL : successURLs) {
             	Utils.LOGGER.log(Level.FINEST, Utils.DELIMITER + successURL);
             	success++;
@@ -104,7 +120,13 @@ public class BibsonomyService {
         }
 	}
 	
-	/* upload post via API */
+	/**
+	 * Method for uploading posts via the BibSonomy API.
+	 * 
+	 * @param logic
+	 * @param post A new BibSonomy post
+	 * @param line
+	 */
 	private static void uploadPost(LogicInterface logic, Post<BibTex> post, String line) {
 		
 		/* make post private or public */
@@ -121,13 +143,11 @@ public class BibsonomyService {
 		/* set default tags */
 		post.addTag(Utils.DEFAULT_TAGS);
 		
-
 		/* create new BibTeX publication */
 		final BibTex publication = new BibTex();
 
 		/* get values from post */ 
 		publication.setTitle(post.getResource().getTitle());
-		// publication.setAuthor(PersonNameUtils.discoverPersonNamesIgnoreExceptions("Mustermann, Max"));
 		publication.setAuthor(post.getResource().getAuthor());
 		publication.setYear(post.getResource().getYear());
 		publication.setEntrytype(post.getResource().getEntrytype());
@@ -135,13 +155,12 @@ public class BibsonomyService {
 		publication.setAbstract(post.getResource().getAbstract());
 		publication.setJournal(post.getResource().getJournal());
 		publication.setUrl(post.getResource().getUrl());
-		// TODO: DOI hinzufügen!
+		// TODO: Add DOI
 		
 		/* add BibTex elements to the Bibsonomy post */
 		post.setResource(publication);
 
 		try {
-			// TODO: Exception ,wenn Eintrag bereits in der Bibsonomy-Collection enthalten ist!
 			logic.createPosts(Collections.<Post<? extends Resource>>singletonList(post));
     	    successURLs.add(line);
 		} catch (Exception e) {
@@ -149,16 +168,7 @@ public class BibsonomyService {
 			noSuccess++;
 			Utils.LOGGER.log(Level.SEVERE, errMsg);
 		}
+		
 	}
-	
-	/*
-	// Get list of posts
-	private static void getPosts(LogicInterface logic) {
-		List<Post<BibTex>> publications = logic.getPosts(BibTex.class, GroupingEntity.USER, Utils.USERNAME, null, null, "", null, null, null, null, null, 0, 100);
-		for (Post<BibTex> pub: publications) {
-			System.out.println(pub);
-		}
-	}
-	*/
 
 }

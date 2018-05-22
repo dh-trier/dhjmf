@@ -3,7 +3,7 @@ package de.dhjmf.rss;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
+/**
  * Stores an RSS feed
  */
 public class Feed {

@@ -15,7 +15,8 @@ import de.dhjmf.rss.*;
 /**
  * Abstract class for all digital humanities journal crawlers that use RSS feeds
  * 
- * @author alueschow
+ * @author Andreas Lüschow
+ * @since 2018-05-22
  */
 public abstract class AbstractRSSCrawler extends AbstractCrawler {
 	
@@ -23,7 +24,7 @@ public abstract class AbstractRSSCrawler extends AbstractCrawler {
 	protected Feed feed;
 	
 	/** 
-	 * 
+	 * Initialize the RSSCrawler. Parameters are specified in a separate Crawler class for every journal.
 	 */
 	protected AbstractRSSCrawler(String journalName, String folder, String newlinksFolder, String feedURL, String doc, String tmp, String out) throws IOException {
 		this.journal = journalName;

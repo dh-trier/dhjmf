@@ -17,8 +17,8 @@ import javax.xml.stream.events.XMLEvent;
 
 import de.dhjmf.Utils;
 
-/*
- * see also: http://www.vogella.com/tutorials/RSSFeed/article.html
+/**
+ * Class for parsing RSS feeds. See also: http://www.vogella.com/tutorials/RSSFeed/article.html
  */
 public class RSSFeedParser {
     static final String TITLE = "title";

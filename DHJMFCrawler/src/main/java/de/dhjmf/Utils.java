@@ -32,6 +32,10 @@ public class Utils implements Serializable {
     public static String EMAIL_ENABLE_STARTTLS;
     public static String EMAIL_SUBJECT;
     public static String EMAIL_BODY;
+    
+    public static String ZIPNAME;
+    public static String ZIPNAME_MAIL;
+    public static String ZIPFOLDER;
 
     public static String USERNAME;
     public static String API_KEY;
@@ -98,9 +102,8 @@ public class Utils implements Serializable {
             LOGGER = Logger.getLogger(Utils.class.getName());
             LOGFILE = LOGFOLDER + "/" + config.getString("dhjmf.logger.file") + "_" + TODAY + ".txt";
             LOGFILE_MAIL = config.getString("dhjmf.logger.file") + "_" + TODAY + ".txt";
-	        // This block configure the logger with handler and formatter  
+	        // This code configures the logger with handler and formatter  
 	        FileHandler fh = new FileHandler(LOGFILE);  
-	        // SimpleFormatter formatter = new SimpleFormatter();  
 	        DHJMFFormatter formatter = new DHJMFFormatter();
 	        fh.setFormatter(formatter);
 	        LOGGER.addHandler(fh);
@@ -133,7 +136,7 @@ public class Utils implements Serializable {
         EMAIL_SUBJECT = config.getString("dhjmf.mail.subject");
         EMAIL_BODY = config.getString("dhjmf.mail.body");
         
-        // TODO: Mehr als einen Default-Tag erlauben
+        // TODO: Allow more than one default tag
         DEFAULT_TAGS = config.getString("bibsonomy.post.tags");
                 
         EOL = config.getString("dhjmf.files.eol");
@@ -142,6 +145,11 @@ public class Utils implements Serializable {
         NEWLINKS = WORKDIR + config.getString("dhjmf.files.newlinks");
         BIBTEX_FOLDER = WORKDIR + config.getString("dhjmf.files.bibtex_folder") + "/";
         BIBTEX_FILE = BIBTEX_FOLDER + config.getString("dhjmf.files.bibtex_snippets") + "_" + TODAY + ".bib";
+        
+        ZIPFOLDER = WORKDIR + config.getString("dhjmf.files.zipfolder") + "/";
+    	new File(ZIPFOLDER).mkdir();
+        ZIPNAME = ZIPFOLDER + config.getString("dhjmf.files.zipname") + "_" + TODAY + ".zip";
+        ZIPNAME_MAIL = config.getString("dhjmf.files.zipname") + "_" + TODAY + ".zip";
         
         VERBOSE = Boolean.parseBoolean(config.getString("dhjmf.debug.verbose"));
         
