@@ -7,13 +7,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Scanner;
 import java.util.logging.Level;
 
 import org.bibsonomy.model.BibTex;
@@ -23,9 +22,7 @@ import org.bibsonomy.model.User;
 import org.bibsonomy.model.logic.LogicInterface;
 import org.bibsonomy.model.util.GroupUtils;
 import org.bibsonomy.rest.client.*;
-import org.bibsonomy.rest.client.queries.post.CreatePostQuery;
 import org.bibsonomy.bibtex.parser.*;
-import org.bibsonomy.common.enums.PostUpdateOperation;
 
 import de.dhjmf.Utils;
 
@@ -33,7 +30,7 @@ import de.dhjmf.Utils;
  * Class for uploading records to the BibSonomy publication sharing system
  *
  * @author Andreas Lüschow
- * @since 2018-05-22
+ * @since 2018-09-14
  */
 public class BibsonomyService {
 	
@@ -72,31 +69,37 @@ public class BibsonomyService {
         FileReader reader = new FileReader(Utils.NEWLINKS);
         BufferedReader br = new BufferedReader(reader);
         String line = br.readLine();
-        
+                
         /* start scraping */
         while(line != null) {
-        	String url = Utils.BIBSCRAPER_BASE_URL + line + Utils.BIBSCRAPER_FORMAT;
-        	System.out.println("URL: " + url);
-        	/* call the Bibsonomy scraping service */
+        	UrlListScraper urlListScraper = new UrlListScraper(); // Initialize UrlListScraper Object
+        	System.out.println("URL aus RSS-Feed: " + line);
+        	/* call the Bibsonomy scraper */
         	try {
-        		InputStream response = new URL(url).openStream();
-            	try (Scanner scanner = new Scanner(response)) {
-            	    String responseBody = scanner.useDelimiter("\\A").next();
-            	    
-            	    Post<BibTex> post = new Post<BibTex>();
-            	    PostBibTeXParser pbp = new PostBibTeXParser();
-            	    post = pbp.parseBibTeXPost(responseBody);
-            	    
-            	    // System.out.println(responseBody);
-            	    writerBibtex.write(responseBody + Utils.EOL + Utils.EOL);  // create a blank line between two entries
-            	    uploadPost(logic, post, line);  // upload scraped post
-            	}
+        		String url = "";
+        		if (line.contains("dx.doi")) {
+	        		URL urlobj = new URL(line);
+	        		URLConnection conn = urlobj.openConnection();
+        			url = conn.getHeaderField("Link").split(";")[0].replace("<", "").replace(">", ""); // get original URL if dx.doi.org was used
+        			System.out.println("Verwendete (Original-)URL: " + url);
+        		} else {
+        			url = line;  // use URL from file in all other cases
+        		}
+        		
+        		// Create Post and get BibTex
+        		String responseBody = urlListScraper.writePublications(url);
+        	    Post<BibTex> post = new Post<BibTex>();
+        	    PostBibTeXParser pbp = new PostBibTeXParser();
+        	    post = pbp.parseBibTeXPost(responseBody);
+        	    
+        	    writerBibtex.write(responseBody + Utils.EOL + Utils.EOL);  // create a blank line between two entries
+        	    uploadPost(logic, post, line);  // upload scraped post
         	} catch (NoSuchElementException e) {
         		String errMsg = line + " does not point to a scrapable URL, please check this! Reason: " + e.toString();
         		Utils.LOGGER.log(Level.SEVERE, errMsg);
         		noSuccess++;
         	} catch (Exception e) {
-        		String errMsg = "Unknow Error: " + e + "";
+        		String errMsg = "Unknow Error: " + e + " für URL " + line;
         		Utils.LOGGER.log(Level.SEVERE, errMsg);
         		noSuccess++;
         	}
