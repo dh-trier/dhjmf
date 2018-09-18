@@ -96,7 +96,7 @@ public class ZfdGScraper extends AbstractUrlScraper {
 	private static final Pattern PATTERN_TEI_XML = Pattern.compile("<div id=\"xml_but\" class=\"but\"><a href=\"([^\"]*)\"");
 	private static final Pattern PATTERN_KEY_VALUE = Pattern.compile("([^=]*)=(([^&]|&(?!amp;))*)(&amp;|&)?");
 	private static final Pattern PATTERN_DATE = Pattern.compile("(\\d{4})");
-	private static final Pattern PATTERN_DOI = Pattern.compile("http://dx.doi.org/(.*)");
+	private static final Pattern PATTERN_DOI = Pattern.compile("https?://(dx\.)?doi.org/(.*)");
 	private static final Pattern PATTERN_ABSTRACT = Pattern.compile("<h1>Abstract</h1>(([^<]|<(?!/p>))*)</p>", Pattern.DOTALL);
 	// TODO: weitere Abstracts berücksichtigen ("<div id=\"abstract_de\" class=\"abstract\"><h1>Abstract</h1>(([^<]|<(?!/p>))*)</p>" funktioniert nicht...)
 
