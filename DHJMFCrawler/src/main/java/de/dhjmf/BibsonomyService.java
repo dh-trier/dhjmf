@@ -77,10 +77,10 @@ public class BibsonomyService {
         	/* call the Bibsonomy scraper */
         	try {
         		String url = "";
-        		if (line.contains("dx.doi")) {
+        		if (line.contains("doi.org")) {
 	        		URL urlobj = new URL(line);
 	        		URLConnection conn = urlobj.openConnection();
-        			url = conn.getHeaderField("Link").split(";")[0].replace("<", "").replace(">", ""); // get original URL if dx.doi.org was used
+        			url = conn.getHeaderField("Link").split(";")[0].replace("<", "").replace(">", ""); // get original URL if doi.org was used
         			System.out.println("Verwendete (Original-)URL: " + url);
         		} else {
         			url = line;  // use URL from file in all other cases
